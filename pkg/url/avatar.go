@@ -1,12 +1,9 @@
-package pkg
+package url
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"log"
 	u "net/url"
 	"strconv"
-	"strings"
 )
 
 type Protocol = string
@@ -16,7 +13,7 @@ const (
 	pHttps = "https"
 )
 
-type GravatarOptions struct {
+type AvatarOptions struct {
 	Email      string
 	Parameters u.Values
 	Protocol   Protocol
@@ -43,50 +40,50 @@ const (
 	RatingX  Rate = "x"
 )
 
-type GravatarOptionsConfiuration func(*GravatarOptions)
+type AvatarOptionsConfiuration func(*AvatarOptions)
 
-func DefaultImage(url string) GravatarOptionsConfiuration {
-	return func(opt *GravatarOptions) {
+func DefaultImage(url string) AvatarOptionsConfiuration {
+	return func(opt *AvatarOptions) {
 		opt.Parameters.Add("default", url)
 	}
 }
 
-func Size(pixels int) GravatarOptionsConfiuration {
-	return func(opt *GravatarOptions) {
+func Size(pixels int) AvatarOptionsConfiuration {
+	return func(opt *AvatarOptions) {
 		opt.Parameters.Add("size", strconv.Itoa(pixels))
 	}
 }
-func ForceDefault() GravatarOptionsConfiuration {
-	return func(opt *GravatarOptions) {
+func ForceDefault() AvatarOptionsConfiuration {
+	return func(opt *AvatarOptions) {
 		opt.Parameters.Add("forcedefault", "y")
 	}
 }
-func Rating(rating Rate) GravatarOptionsConfiuration {
-	return func(opt *GravatarOptions) {
+func Rating(rating Rate) AvatarOptionsConfiuration {
+	return func(opt *AvatarOptions) {
 		opt.Parameters.Add("rating", rating)
 	}
 }
 
-func UseHttp() GravatarOptionsConfiuration {
-	return func(opt *GravatarOptions) {
+func UseHttp() AvatarOptionsConfiuration {
+	return func(opt *AvatarOptions) {
 		opt.Protocol = pHttp
 	}
 }
 
 const gravatarDefaultUrl = "://gravatar.com/avatar/"
 
-func newGravatarOptions(email string) *GravatarOptions {
-	return &GravatarOptions{
+func newGravatarOptions(email string) *AvatarOptions {
+	return &AvatarOptions{
 		Email:      email,
 		Parameters: u.Values{},
 		Protocol:   pHttps,
 	}
 }
 
-func (opt *GravatarOptions) Config(config GravatarOptionsConfiuration) {
+func (opt *AvatarOptions) Config(config AvatarOptionsConfiuration) {
 	config(opt)
 }
-func (opt *GravatarOptions) BuildUrl() *u.URL {
+func (opt *AvatarOptions) BuildUrl() *u.URL {
 	str := opt.Protocol + gravatarDefaultUrl + hashEmail(opt.Email)
 	// log.Printf("%s\n", str)
 	url, err := u.Parse(str)
@@ -98,21 +95,10 @@ func (opt *GravatarOptions) BuildUrl() *u.URL {
 	return url
 }
 
-func NewGravatar(email string, configs ...GravatarOptionsConfiuration) string {
+func NewAvatarUrl(email string, configs ...AvatarOptionsConfiuration) string {
 	opt := newGravatarOptions(email)
 	for _, conf := range configs {
 		opt.Config(conf)
 	}
 	return opt.BuildUrl().String()
-}
-
-func hashEmail(email string) string {
-	email = strings.ToLower(email)
-
-	inputData := []byte(email)
-	outputData := sha256.Sum256(inputData)
-	hash := hex.EncodeToString(outputData[:])
-	// log.Printf("%s\n", hash)
-	return hash
-
 }
