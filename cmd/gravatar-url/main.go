@@ -6,7 +6,7 @@ import (
 
 	"github.com/jessevdk/go-flags"
 
-	g "gravatar/pkg/url"
+	g "github.com/katy248/gravatar/pkg/url"
 )
 
 type CliOptions struct {

@@ -1,4 +1,4 @@
-module gravatar
+module github.com/katy248/gravatar
 
 go 1.23rc2
 

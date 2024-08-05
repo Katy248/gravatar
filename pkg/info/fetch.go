@@ -2,7 +2,7 @@ package info
 
 import (
 	"encoding/json"
-	"gravatar/pkg/url"
+	"github.com/katy248/gravatar/pkg/url"
 	"io"
 	"log"
 	"net/http"

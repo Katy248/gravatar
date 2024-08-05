@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"gravatar/pkg/info"
-	"gravatar/pkg/url"
+	"github.com/katy248/gravatar/pkg/info"
+	"github.com/katy248/gravatar/pkg/url"
 	"image/png"
 	"log"
 	"net/http"
